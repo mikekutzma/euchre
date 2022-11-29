@@ -1,4 +1,4 @@
-import { writable, derived } from 'svelte/store';
+import { writable, derived } from "svelte/store";
 
 export const socket = writable();
 
@@ -9,9 +9,9 @@ export const userdata = writable({});
 export const userid = derived(userdata, getuserid);
 
 function getuserid(userdata) {
-    if (userdata && userdata.username) {
-        return userdata.username;
-    } else {
-        return null;
-    }
+  if (userdata && userdata.username) {
+    return userdata.username;
+  } else {
+    return null;
+  }
 }

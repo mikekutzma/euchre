@@ -1,53 +1,49 @@
 <script>
-    import { onMount } from "svelte";
-    import Card from "./Card.svelte";
-    import { socket, apiUrl } from "./store.js";
+  import { onMount } from "svelte";
+  import Card from "./Card.svelte";
+  import { socket, apiUrl } from "./store.js";
 
-    let handCards = [];
-    export let myTurn = false;
+  let handCards = [];
+  export let myTurn = false;
 
-
-    async function getHand() {
-        try {
-            const res = await fetch("http://"+$apiUrl+"/hand");
-            const data = await res.json();
-            console.log("Hand: %o", data);
-            handCards = data;
-        }
-        catch(err) {
-            console.log(err);
-        }
+  async function getHand() {
+    try {
+      const res = await fetch("http://" + $apiUrl + "/hand");
+      const data = await res.json();
+      console.log("Hand: %o", data);
+      handCards = data;
+    } catch (err) {
+      console.log(err);
     }
+  }
 
-    onMount(getHand)
+  onMount(getHand);
 
-    $: if ($socket != null) {
-        $socket.on("refreshHand", (data) => {
-            getHand();
-        });
+  $: if ($socket != null) {
+    $socket.on("refreshHand", (data) => {
+      getHand();
+    });
+  }
+
+  function playCard(event) {
+    if (myTurn) {
+      handCards.splice(event.detail.index, 1);
+      handCards = handCards; // Needed to react
+      $socket.emit("playCard", event.detail);
+    } else {
+      alert("Not my turn..");
     }
-
-    function playCard(event) {
-        if (myTurn){
-            handCards.splice(event.detail.index, 1);
-            handCards = handCards; // Needed to react
-            $socket.emit("playCard", event.detail);
-        } else{
-            alert("Not my turn..");
-        }
-    }
-
+  }
 </script>
 
 <div class="hand-container">
-{#each handCards as card, i}
-    <Card on:cardClick={playCard} index={i} cardData={card}/>
-{/each}
+  {#each handCards as card, i}
+    <Card on:cardClick={playCard} index={i} cardData={card} />
+  {/each}
 </div>
 
 <style>
-    .hand-container {
-        flex: 0 1 auto;
-    }
-    
+  .hand-container {
+    flex: 0 1 auto;
+  }
 </style>
