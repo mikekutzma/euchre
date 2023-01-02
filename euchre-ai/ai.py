@@ -1,12 +1,9 @@
 from typing import Dict, List
 
-from deck import Suit
+from euchrelib.deck import Suit
 
 
 class AI:
-
-    names = ["Kosh", "Linus", "Scamp"]
-
     @classmethod
     def is_ais_turn(cls, data):
         live = (

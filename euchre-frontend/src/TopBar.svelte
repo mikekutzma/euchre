@@ -10,7 +10,9 @@
 
   async function setUserData() {
     try {
-      const res = await fetch("http://" + $apiUrl + "/getSession");
+      const res = await fetch($apiUrl + "/getSession", {
+        credentials: "include",
+      });
       const data = await res.json();
       // const data = {logged_in: true, username: "Mike"};
 
@@ -35,7 +37,7 @@
       return;
     }
     try {
-      const res = await fetch("http://" + $apiUrl + "/login", {
+      const res = await fetch($apiUrl + "/login", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -51,8 +53,9 @@
   }
 
   const logout = () => {
-    fetch("http://" + $apiUrl + "/logout", {
+    fetch($apiUrl + "/logout", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },

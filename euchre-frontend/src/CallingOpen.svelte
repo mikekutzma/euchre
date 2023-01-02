@@ -1,5 +1,5 @@
 <script>
-  import { socket } from "./store.js";
+  import { socket, gameId } from "./store.js";
 
   export let pickupCard;
   export let myTurn = false;
@@ -8,11 +8,11 @@
   let suits = ["spades", "hearts", "clubs", "diamonds"];
 
   function call(suit) {
-    $socket.emit("callTrump", { suit });
+    $socket.emit("callTrump", { suit: suit, gameId: $gameId });
   }
 
   function pass() {
-    $socket.emit("passTrump", {});
+    $socket.emit("passTrump", {gameId: $gameId});
   }
 </script>
 

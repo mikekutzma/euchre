@@ -1,17 +1,20 @@
-import random
-from copy import deepcopy
 import json
 import logging
+import random
 import uuid
+from copy import deepcopy
 from dataclasses import asdict, dataclass, field, is_dataclass
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
-from ai import AI
-from deck import Card, Deck, Suit
+from importlib_resources import files
+
+from .deck import Card, Deck, Suit
 
 _logger = logging.getLogger(__name__)
 NPLAYERS = 4
+
+SAMPLE_NAMES = ["Kosh", "Linus", "Scamp"]
 
 
 @dataclass
@@ -120,11 +123,11 @@ class Team:
         self.team_name = self.generate_name()
 
     def generate_name(self):
-        with open("resources/animals.txt") as f:
-            animals = [line.strip() for line in f.readlines() if line.strip()]
+        data_text = files("euchrelib.data").joinpath("animals.txt").read_text()
+        animals = [line.strip() for line in data_text.splitlines() if line.strip()]
 
         animal = random.choice(animals)
-        return animal.title()+"s"
+        return animal.title() + "s"
 
 
 @dataclass
@@ -147,7 +150,7 @@ class Game:
 
     def start_game(self):
         for i in range(NPLAYERS - len(self.players)):
-            name = AI.names[i]
+            name = SAMPLE_NAMES[i]
             self.add_player(name, sid=None, isAI=True)
         self.live = True
         self.start_round()
@@ -211,7 +214,6 @@ class Game:
         else:
             player = self.get_player_by_sid(sid)
 
-
         player.play_card(card)
 
         self.rnd.play_card(player, card)
@@ -252,7 +254,9 @@ class Game:
 
     @property
     def status(self) -> Dict:
-        trick_cards = {player.name: asdict(card) for player, card in self.rnd.trick.cards.items()}
+        trick_cards = {
+            player.name: asdict(card) for player, card in self.rnd.trick.cards.items()
+        }
         game_copy = deepcopy(self)
         game_copy.rnd.trick.cards = {}
 
@@ -267,6 +271,7 @@ class Game:
 
         return data
 
+
 def status_factory(data):
     out = {}
     for key, value in data:
@@ -275,6 +280,7 @@ def status_factory(data):
         else:
             out[key] = value
     return out
+
 
 class GameEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -299,8 +305,3 @@ class GameJSON:
     @classmethod
     def loads(cls, *args, **kwargs):
         return json.loads(*args, **kwargs)
-
-
-# if __name__ == "__main__":
-#     deck = Deck()
-#     print(json.dumps(deck, cls=GameEncoder))

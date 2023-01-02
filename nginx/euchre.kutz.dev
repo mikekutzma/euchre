@@ -1,0 +1,71 @@
+server {
+    listen 80;
+    server_name euchre.*;
+
+    location / {
+        # redirect any requests to the same URL but on https
+        return 301 https://$host$request_uri;
+    }
+  
+}
+server {
+    listen 80;
+    server_name api.euchre.*;
+
+    location / {
+        # redirect any requests to the same URL but on https
+        return 301 https://$host$request_uri;
+    }
+  
+}
+
+server {
+
+    listen 443 ssl;
+    server_name euchre.*;
+    underscores_in_headers on;
+
+    ssl_certificate         /etc/letsencrypt/live/euchre.kutz.dev/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/euchre.kutz.dev/privkey.pem;
+
+    access_log /var/log/euchre_access.log;
+    error_log /var/log/euchre_error.log info;
+
+    location / {
+
+      proxy_pass          http://localhost:5040;
+      proxy_redirect off;
+
+      proxy_set_header        Host $host;
+      proxy_set_header        X-Real-IP $remote_addr;
+      proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+      # proxy_set_header        X-Forwarded-Proto $scheme;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+    }
+  }
+server {
+
+    listen 443 ssl;
+    server_name api.euchre.*;
+    underscores_in_headers on;
+
+    ssl_certificate         /etc/letsencrypt/live/euchre.kutz.dev/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/euchre.kutz.dev/privkey.pem;
+
+    access_log /var/log/euchre-api_access.log;
+    error_log /var/log/euchre-api_error.log info;
+
+    location / {
+
+      proxy_pass          http://localhost:5041;
+      proxy_redirect off;
+
+      proxy_set_header        Host $host;
+      proxy_set_header        X-Real-IP $remote_addr;
+      proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+      # proxy_set_header        X-Forwarded-Proto $scheme;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+    }
+  }

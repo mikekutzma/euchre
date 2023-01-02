@@ -1,14 +1,21 @@
 <script>
   import { onMount } from "svelte";
   import Card from "./Card.svelte";
-  import { socket, apiUrl } from "./store.js";
+  import { socket, apiUrl, gameId } from "./store.js";
 
   let handCards = [];
   export let myTurn = false;
 
   async function getHand() {
     try {
-      const res = await fetch("http://" + $apiUrl + "/hand");
+      const res = await fetch(
+          $apiUrl +
+          "/hand?" +
+          new URLSearchParams({ gameId: $gameId }),
+        {
+          credentials: "include",
+        }
+      );
       const data = await res.json();
       console.log("Hand: %o", data);
       handCards = data;
@@ -29,7 +36,11 @@
     if (myTurn) {
       handCards.splice(event.detail.index, 1);
       handCards = handCards; // Needed to react
-      $socket.emit("playCard", event.detail);
+      $socket.emit("playCard", {
+        card: event.detail.card,
+        suit: event.detail.suit,
+        gameId: $gameId,
+      });
     } else {
       alert("Not my turn..");
     }

@@ -1,5 +1,5 @@
 <script>
-  import { socket } from "./store.js";
+  import { socket, gameId } from "./store.js";
   export let gameData;
   let scores = [0, 0];
   let turn;
@@ -8,6 +8,7 @@
   let led;
   let rnd;
   let trick;
+  const debug = false;
 
   $: {
     if (gameData) {
@@ -26,12 +27,12 @@
 
   function clearTrick() {
     console.log("Clearing Trick");
-    $socket.emit("clearTrick", {});
+    $socket.emit("clearTrick", { gameId: $gameId });
   }
 
   function startRound() {
     console.log("Starting Round");
-    $socket.emit("startRound", {});
+    $socket.emit("startRound", { gameId: $gameId });
   }
 </script>
 
@@ -39,9 +40,11 @@
   <div class="scorediv">
     <span>{scores[0]}</span>
   </div>
-  <pre id="statusdump">
+  {#if debug}
+    <pre id="statusdump">
         {JSON.stringify(gameData, undefined, 2)}
     </pre>
+  {/if}
   <div class="scoresmiddle">
     {#if trump}
       <span>Trump: {trump}</span>
@@ -74,7 +77,8 @@
     border: 1px solid white;
     font-size: 2em;
     overflow: auto;
-    height: 100vh;
+    /* height: 100vh;
+    */
   }
 
   .scorediv {

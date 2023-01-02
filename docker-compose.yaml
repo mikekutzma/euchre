@@ -1,0 +1,23 @@
+version: "3"
+services:
+  euchre-frontend:
+    image: mikekutzma/euchre-frontend
+    build:
+      dockerfile: ./euchre-frontend/Dockerfile
+      context: .
+    ports:
+      - "5040:80"
+  euchre-api:
+    image: mikekutzma/euchre-api
+    build:
+      dockerfile: ./euchre-api/Dockerfile
+      context: .
+    ports:
+      - "5041:5041"
+  euchre-ai:
+    image: mikekutzma/euchre-ai
+    build:
+      dockerfile: ./euchre-ai/Dockerfile
+      context: .
+    depends_on:
+      - euchre-api

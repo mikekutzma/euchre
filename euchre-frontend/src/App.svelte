@@ -2,12 +2,12 @@
   import TopBar from "./TopBar.svelte";
   import GameContainer from "./GameContainer.svelte";
   import { io } from "socket.io-client";
-  import { socket, apiUrl } from "./store.js";
+  import { socket, socketUrl } from "./store.js";
   import { onMount } from "svelte";
 
   let isAuthenticated = false;
 
-  $socket = io("ws://" + $apiUrl);
+  $socket = io($socketUrl);
 
   function login(event) {
     isAuthenticated = true;

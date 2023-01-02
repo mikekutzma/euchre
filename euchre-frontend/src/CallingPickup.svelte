@@ -1,17 +1,17 @@
 <script>
   import Card from "./Card.svelte";
-  import { socket } from "./store.js";
+  import { socket, gameId } from "./store.js";
 
   export let pickupCard;
   export let myTurn = false;
   // export let turn;
 
   function call() {
-    $socket.emit("callTrump", { suit: pickupCard.suit });
+    $socket.emit("callTrump", { suit: pickupCard.suit , gameId: $gameId });
   }
 
   function pass() {
-    $socket.emit("passTrump", {});
+    $socket.emit("passTrump", {gameId: $gameId});
   }
 </script>
 
