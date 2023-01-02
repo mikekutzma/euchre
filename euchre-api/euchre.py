@@ -29,4 +29,4 @@ setup_cors(app)
 
 if __name__ == "__main__":
     _logger = logging.getLogger()
-    web.run_app(app, port=getenv("API_PORT"))
+    web.run_app(app, port=getenv("API_CONTAINER_PORT"))
