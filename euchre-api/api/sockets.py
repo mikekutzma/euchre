@@ -16,7 +16,7 @@ class SocketController:
             async_handlers=True,
             cors_allowed_origins=[
                 "*",
-                getenv("FRONTEND_URL")+"/",
+                getenv("FRONTEND_URL"),
             ],
             json=GameJSON,
         )
