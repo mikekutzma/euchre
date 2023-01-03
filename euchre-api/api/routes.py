@@ -77,13 +77,18 @@ async def join(request):
     user = session.get("username")
 
     if user is None:
+        _logger.error("User is None")
         raise web.HTTPUnauthorized()
 
     data = await request.json()
     sid = data.get("sid")
     game_id = data.get("gameId")
 
-    if sid is None or game_id is None:
+    if sid is None:
+        _logger.error("Sid is None")
+        raise web.HTTPBadRequest()
+    elif game_id is None:
+        _logger.error("Sid is None")
         raise web.HTTPBadRequest()
 
     game = request.app["games"][game_id]
