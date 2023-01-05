@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
 FROM ubuntu:latest
+ARG DOTENV_FILE
 
 RUN apt-get update -y && \
     apt-get install -y python3.10 python3-pip
@@ -11,7 +12,7 @@ COPY ./euchrelib /euchrelib
 RUN python3 -m pip install /euchrelib
 
 COPY ./euchre-ai /app
-COPY ./.env.prod /app/.env
+COPY $DOTENV_FILE /app/.env
 WORKDIR /app
 
 RUN python3 -m pip install -r ./requirements.txt

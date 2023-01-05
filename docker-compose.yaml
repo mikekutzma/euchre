@@ -5,6 +5,8 @@ services:
     build:
       dockerfile: ./euchre-frontend/Dockerfile
       context: .
+      args:
+        - DOTENV_FILE=.env.prod
     ports:
       - "5040:80"
   euchre-api:
@@ -12,6 +14,8 @@ services:
     build:
       dockerfile: ./euchre-api/Dockerfile
       context: .
+      args:
+        - DOTENV_FILE=.env.prod
     ports:
       - "5041:5041"
   euchre-ai:
@@ -19,5 +23,7 @@ services:
     build:
       dockerfile: ./euchre-ai/Dockerfile
       context: .
+      args:
+        - DOTENV_FILE=.env.prod
     depends_on:
       - euchre-api

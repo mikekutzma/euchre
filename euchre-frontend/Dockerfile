@@ -1,10 +1,11 @@
 # syntax=docker/dockerfile:1
 FROM node:alpine as build-deps
+ARG DOTENV_FILE
 WORKDIR /usr/src/app
 COPY ./euchre-frontend/package.json ./euchre-frontend/package-lock.json ./
 RUN npm install
 COPY ./euchre-frontend/ ./
-COPY ./.env.prod ./.env
+COPY $DOTENV_FILE ./.env
 RUN npm run build
 
 # Nginx
