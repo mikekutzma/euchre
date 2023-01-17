@@ -113,4 +113,8 @@
     padding: 10px 0;
     font-size: 1.5em;
   }
+  img {
+    width: 50%;
+    height: 50%;
+  }
 </style>

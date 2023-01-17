@@ -12,8 +12,6 @@
   }
 
   $: if (cardData) {
-    // num = cardData.number.split("_")[1].toLowerCase();
-    // suit = cardData.suit.split("_")[1].toLowerCase();
     src = getImagePath(cardData.number, cardData.suit);
   }
 

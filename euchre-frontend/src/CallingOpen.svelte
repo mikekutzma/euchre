@@ -4,15 +4,18 @@
   export let pickupCard;
   export let myTurn = false;
   export let canPass = true;
-  // export let turn;
-  let suits = ["spades", "hearts", "clubs", "diamonds"];
+
+  const allsuits = ["spades", "hearts", "clubs", "diamonds"];
+  let suits = [];
+
+  $: suits = allsuits.filter((suit) => suit != pickupCard.suit);
 
   function call(suit) {
     $socket.emit("callTrump", { suit: suit, gameId: $gameId });
   }
 
   function pass() {
-    $socket.emit("passTrump", {gameId: $gameId});
+    $socket.emit("passTrump", { gameId: $gameId });
   }
 </script>
 

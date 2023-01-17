@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import Card from "./Card.svelte";
+  import Card from "./lib/Card.svelte";
   import { socket, apiUrl, gameId } from "./store.js";
 
   let handCards = [];
@@ -9,9 +9,7 @@
   async function getHand() {
     try {
       const res = await fetch(
-          $apiUrl +
-          "/hand?" +
-          new URLSearchParams({ gameId: $gameId }),
+        $apiUrl + "/hand?" + new URLSearchParams({ gameId: $gameId }),
         {
           credentials: "include",
         }
@@ -32,13 +30,13 @@
     });
   }
 
-  function playCard(event) {
+  function playCard(card, ind) {
+    console.log("Click");
     if (myTurn) {
-      handCards.splice(event.detail.index, 1);
+      handCards.splice(ind, 1);
       handCards = handCards; // Needed to react
       $socket.emit("playCard", {
-        card: event.detail.card,
-        suit: event.detail.suit,
+        card: card,
         gameId: $gameId,
       });
     } else {
@@ -49,12 +47,19 @@
 
 <div class="hand-container">
   {#each handCards as card, i}
-    <Card on:cardClick={playCard} index={i} cardData={card} />
+    <div class="click-container" on:click={() => playCard(card, i)}>
+      <Card cardData={card} />
+    </div>
   {/each}
 </div>
 
 <style>
   .hand-container {
-    flex: 0 1 auto;
+    display: flex;
+    flex-direction: row;
+  }
+  .click-container {
+    max-height: 120px;
+    flex-basis: content;
   }
 </style>
