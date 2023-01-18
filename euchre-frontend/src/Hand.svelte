@@ -31,10 +31,11 @@
   }
 
   function playCard(card, ind) {
-    console.log("Click");
+    console.log("Clicked: index %d card %o", ind, card);
     if (myTurn) {
       handCards.splice(ind, 1);
       handCards = handCards; // Needed to react
+      console.log("New Hand: %o", handCards);
       $socket.emit("playCard", {
         card: card,
         gameId: $gameId,
@@ -46,7 +47,7 @@
 </script>
 
 <div class="hand-container">
-  {#each handCards as card, i}
+  {#each handCards as card, i (card)}
     <div class="click-container" on:click={() => playCard(card, i)}>
       <Card cardData={card} />
     </div>

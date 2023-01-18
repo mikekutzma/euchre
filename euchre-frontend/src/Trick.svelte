@@ -12,13 +12,11 @@
   $: {
     if (gameData) {
       trickCards = gameData.rnd.trick.cards;
-      console.log(trickCards);
 
       positions = get_positions(gameData);
       for (const [position, name] of Object.entries(positions)) {
         cards[position] = trickCards[name];
       }
-      console.log(cards);
     }
   }
 </script>
