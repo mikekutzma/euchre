@@ -1,0 +1,113 @@
+html,
+body,
+.container {
+  height: 100vh;
+  width: 100vw;
+  margin: 0px;
+  background-color: grey;
+}
+
+.header {
+    background-color: darkgrey;
+    border: 1px black solid;
+}
+
+.status {
+    background-color: lightgrey;
+    border: 2px black solid;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 25% 50% 25%;
+  grid-template-rows: 10% 15% 20% 35% 20%;
+  grid-template-areas:
+    "header header header"
+    "status status status"
+    ". top-player ."
+    "left-player trick-container right-player"
+    ". bottom-player .";
+}
+
+.upright-player {
+  display: flex;
+  justify-content: center;
+}
+
+.upright-card-box {
+  max-height: 100%;
+  max-width: 15%;
+}
+
+.side-player {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.side-card-box {
+  max-height: 15%;
+  max-width: 100%;
+}
+
+.card-box > img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+.trick-container {
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  grid-template-rows: 33% 33% 33%;
+  grid-template-areas:
+    ". trick-top ."
+    "trick-left . trick-right"
+    ". trick-bottom .";
+}
+
+.trick-cell {
+  display: flex;
+  justify-content: center;
+}
+
+.trick-card-box {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+/* Grid area definitions */
+
+.header {
+  grid-area: header;
+}
+.status {
+  grid-area: status;
+}
+.top-player {
+  grid-area: top-player;
+}
+.left-player {
+  grid-area: left-player;
+}
+.trick-container {
+  grid-area: trick-container;
+}
+.right-player {
+  grid-area: right-player;
+}
+.bottom-player {
+  grid-area: bottom-player;
+}
+.trick-top {
+  grid-area: trick-top;
+}
+.trick-left {
+  grid-area: trick-left;
+}
+.trick-right {
+  grid-area: trick-right;
+}
+.trick-bottom {
+  grid-area: trick-bottom;
+}
