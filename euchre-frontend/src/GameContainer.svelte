@@ -17,9 +17,9 @@
     }
   }
   $: {
-      if (gameId_holder) {
-          $gameId = gameId_holder;
-      }
+    if (gameId_holder) {
+      $gameId = gameId_holder;
+    }
   }
 
   async function join(gameId) {
@@ -109,16 +109,18 @@
 {:else if inGame}
   <Lobby {gameData} />
 {:else}
-  <div class="new-game-container">
-    <button class="new-game-button" on:click={joinNewGame}> New Game </button>
-  </div>
-  <div class="games-container">
-    {#each gamesData as game}
-      <div class="game-container">
-        {game}
-        <button on:click={() => join(game)}>Join</button>
-      </div>
-    {/each}
+  <div class="lobby-game-container">
+    <div class="new-game-container">
+      <button class="new-game-button" on:click={joinNewGame}> New Game </button>
+    </div>
+    <div class="games-container">
+      {#each gamesData as game}
+        <div class="game-container">
+          {game}
+          <button on:click={() => join(game)}>Join</button>
+        </div>
+      {/each}
+    </div>
   </div>
 {/if}
 

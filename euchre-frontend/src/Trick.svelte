@@ -1,8 +1,9 @@
 <script>
   import { onMount } from "svelte";
   import { socket, apiUrl } from "./store.js";
-  import Card from "./Card.svelte";
+  import Card from "./lib/Card.svelte";
   export let trickData;
+  export let players = [];
   let trickCards = {};
 
   $: {
@@ -12,15 +13,15 @@
   }
 </script>
 
-<h1>Trick</h1>
-<div class="trick-container">
-  {#each Object.entries(trickCards) as [player, card]}
-    <Card cardData={card} title={player} />
-  {/each}
-</div>
+{#each players as player}
+  <div class="trick-{player.position}-container trick-cell">
+    {#if trickCards[player.name]}
+      <div class="trick-card-box">
+        <Card cardData={trickCards[player.name]} />
+      </div>
+    {/if}
+  </div>
+{/each}
 
 <style>
-  .trick-container {
-    flex: 1 1 auto;
-  }
 </style>

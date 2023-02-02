@@ -25,26 +25,28 @@
   }
 
   function startGame() {
-      console.log("Starting game with id: "+$gameId+"...");
+    console.log("Starting game with id: " + $gameId + "...");
     $socket.emit("startGame", { gameId: $gameId });
   }
 </script>
 
 <h1>Lobby</h1>
-{#if readyToPlay}
-  <button on:click={startGame}> Start Game </button>
-{/if}
-<ul>
-  {#each teamEntries as [team, teamPlayers]}
-    <li>
-      {team}
-      <ul>
-        {#each teamPlayers as player}
-          <li>
-            {player.name}
-          </li>
-        {/each}
-      </ul>
-    </li>
-  {/each}
-</ul>
+<div class="waiting-game-container">
+  {#if readyToPlay}
+    <button on:click={startGame}> Start Game </button>
+  {/if}
+  <ul>
+    {#each teamEntries as [team, teamPlayers]}
+      <li>
+        {team}
+        <ul>
+          {#each teamPlayers as player}
+            <li>
+              {player.name}
+            </li>
+          {/each}
+        </ul>
+      </li>
+    {/each}
+  </ul>
+</div>

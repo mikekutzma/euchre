@@ -1,9 +1,10 @@
 <script>
   import Hand from "./Hand.svelte";
   import Trick from "./Trick.svelte";
+  import Card from "./lib/Card.svelte";
+  import { getPlayersData } from "./lib/utils.js";
   import Scoreboard from "./Scoreboard.svelte";
-  import CallingPickup from "./CallingPickup.svelte";
-  import CallingOpen from "./CallingOpen.svelte";
+  import CallView from "./CallView.svelte";
   import { socket, apiUrl, userid } from "./store.js";
   import { onMount } from "svelte";
 
@@ -14,9 +15,11 @@
   let roundState;
   let pickupCard;
   let canPass;
+  let players = [];
 
   $: {
     if (gameData) {
+      players = getPlayersData(gameData, $userid);
       trickData = gameData.rnd.trick;
       myTurn = gameData.turn == $userid;
       roundState = gameData.rnd.status;
@@ -29,33 +32,43 @@
   }
 </script>
 
-<div class="gameboard">
-  <Scoreboard {gameData} />
-
-  <div class="board">
-    {#if roundState == "CALLING_PICKUP"}
-      <CallingPickup {pickupCard} {myTurn} {turn} />
-    {:else if roundState == "CALLING_OPEN"}
-      <CallingOpen {pickupCard} {myTurn} {turn} {canPass} />
-    {:else}
-      <Trick {trickData} />
-    {/if}
-
-    <Hand {myTurn} />
+<div class="live-game-container">
+  <div class="scoreboard">
+    <Scoreboard {gameData} />
   </div>
+  {#each players as player}
+    <div class="{player.position}-player-container hand-container">
+      <div class="name-container">
+        <strong>
+          {player.name}
+        </strong>
+      </div>
+      {#if player.name == $userid}
+        <Hand {myTurn} />
+      {:else}
+        <div class="{player.orientation}-player hand-cards-container">
+          {#each { length: player.n_cards } as _, i}
+            <div class="{player.orientation}-card-box">
+              <Card
+                cardData={{ back: true, rotate: player.orientation == "side" }}
+              />
+            </div>
+          {/each}
+        </div>
+      {/if}
+    </div>
+  {/each}
+
+  {#if roundState == "PLAYING"}
+    <div class="board-center-container trick-container">
+      <Trick {trickData} {players} />
+    </div>
+  {:else}
+    <div class="board-center-container call-view-container">
+        <CallView {pickupCard} {myTurn} {canPass} {roundState} />
+    </div>
+  {/if}
 </div>
 
 <style>
-  .gameboard {
-    display: flex;
-    flex-flow: row;
-    width: 100%;
-    flex: 1 1 auto;
-  }
-
-  .board {
-    display: flex;
-    flex-flow: column;
-    flex: 1 1 auto;
-  }
 </style>

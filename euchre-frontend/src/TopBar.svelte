@@ -74,7 +74,7 @@
   };
 </script>
 
-<div class="top-bar">
+<div class="top-bar header">
   {#if isAuthenticated}
     <div class="LeftBox">
       <strong>

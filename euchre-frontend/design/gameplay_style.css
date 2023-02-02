@@ -8,26 +8,53 @@ body,
 }
 
 .header {
-    background-color: darkgrey;
-    border: 1px black solid;
+  background-color: darkgrey;
+  border: 1px black solid;
+}
+.header > button {
+    height: 100%;
+    font-size: 1.5em;
 }
 
 .status {
-    background-color: lightgrey;
-    border: 2px black solid;
+  background-color: lightgrey;
+  border-radius: 30px;
+  margin: 5px;
+  padding: 10px;
+}
+
+.score-box {
+}
+.team-score-box {
+    display: flex;
+    justify-content: space-between;
 }
 
 .container {
   display: grid;
   grid-template-columns: 25% 50% 25%;
-  grid-template-rows: 10% 15% 20% 35% 20%;
+  grid-template-rows: 5% 25% 45% 25%;
   grid-template-areas:
     "header header header"
-    "status status status"
-    ". top-player ."
+    ". top-player status"
     "left-player trick-container right-player"
     ". bottom-player .";
 }
+
+/* PC layout
+@media only screen and (min-width: 720px) {
+  .container {
+    display: grid;
+    grid-template-columns: 20% 20% 40% 20%;
+    grid-template-rows: 5% 25% 45% 25%;
+    grid-template-areas:
+      "header header header header"
+      "status . top-player ."
+      "status left-player trick-container right-player"
+      "status . bottom-player .";
+  }
+}
+*/
 
 .upright-player {
   display: flex;

@@ -24,12 +24,6 @@ a:hover {
   color: #535bf2;
 }
 
-html,
-body {
-  height: 100%;
-  margin: 0;
-}
-
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -37,13 +31,6 @@ h1 {
 
 .card {
   padding: 2em;
-}
-
-#app {
-  display: flex;
-  flex-flow: column;
-  height: 100%;
-  text-align: center;
 }
 
 button {
@@ -63,4 +50,155 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Grid layout */
+
+html,
+body,
+#app {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+#app {
+  display: grid;
+  grid-template-rows: 5% 95%;
+  grid-template-areas:
+    "header"
+    "game-container";
+}
+
+.header {
+  grid-area: header;
+}
+
+.live-game-container {
+  display: grid;
+  grid-template-columns: 25% 50% 25%;
+  grid-template-rows: 25% 50% 25%;
+  grid-template-areas:
+    ". top-player status"
+    "left-player board-center-container right-player"
+    ". bottom-player .";
+}
+
+.name-container {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+  text-align: center;
+  font-size: 1.5em;
+}
+.hand-container {
+  display: grid;
+  grid-template-rows: 15% 80% 5%;
+  grid-template-areas:
+    "name-container"
+    "hand-cards-container"
+    ".";
+}
+.upright-player {
+  display: flex;
+  justify-content: center;
+}
+
+.upright-card-box {
+  max-height: 100%;
+  max-width: 15%;
+}
+
+.side-player {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.side-card-box {
+  max-height: 15%;
+  max-width: 100%;
+}
+.trick-container {
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  grid-template-rows: 33% 33% 33%;
+  grid-template-areas:
+    ". trick-top ."
+    "trick-left . trick-right"
+    ". trick-bottom .";
+}
+
+.trick-cell {
+  display: flex;
+  justify-content: center;
+}
+
+.trick-card-box {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.call-view-container {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-areas:
+    "calling-card call-buttons";
+}
+
+/* Grid Areas */
+.lobby-game-container {
+  grid-area: game-container;
+}
+.waiting-game-container {
+  grid-area: game-container;
+}
+.live-game-container {
+  grid-area: game-container;
+}
+
+.top-player-container {
+  grid-area: top-player;
+}
+.left-player-container {
+  grid-area: left-player;
+}
+.right-player-container {
+  grid-area: right-player;
+}
+.bottom-player-container {
+  grid-area: bottom-player;
+}
+
+.board-center-container {
+  grid-area: board-center-container;
+}
+.scoreboard {
+  grid-area: status;
+}
+.name-container {
+  grid-area: name-container;
+}
+.hand-cards-container {
+  grid-area: hand-cards-container;
+}
+
+.trick-top-container {
+  grid-area: trick-top;
+}
+.trick-bottom-container {
+  grid-area: trick-bottom;
+}
+.trick-left-container {
+  grid-area: trick-left;
+}
+.trick-right-container {
+  grid-area: trick-right;
+}
+.calling-card-container {
+  grid-area: calling-card;
+}
+.call-button-container {
+  grid-area: call-buttons;
 }
