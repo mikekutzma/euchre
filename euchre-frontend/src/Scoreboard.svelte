@@ -25,15 +25,6 @@
     }
   }
 
-  function clearTrick() {
-    console.log("Clearing Trick");
-    $socket.emit("clearTrick", { gameId: $gameId });
-  }
-
-  function startRound() {
-    console.log("Starting Round");
-    $socket.emit("startRound", { gameId: $gameId });
-  }
 </script>
 
 <div class="scoresContainer">
@@ -52,12 +43,6 @@
 
     {#if winner}
       <span>Winner: {winner}</span>
-    {/if}
-
-    {#if rnd.done}
-      <button on:click={startRound}>Start Round</button>
-    {:else if trick.done}
-      <button on:click={clearTrick}>Clear Trick</button>
     {/if}
   </div>
   <div class="scorediv">

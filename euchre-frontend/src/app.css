@@ -126,7 +126,7 @@ body,
   grid-template-rows: 33% 33% 33%;
   grid-template-areas:
     ". trick-top ."
-    "trick-left . trick-right"
+    "trick-left trick-center trick-right"
     ". trick-bottom .";
 }
 
@@ -143,8 +143,23 @@ body,
 .call-view-container {
   display: grid;
   grid-template-columns: 50% 50%;
-  grid-template-areas:
-    "calling-card call-buttons";
+  grid-template-rows: 100%;
+  grid-template-areas: "calling-card call-buttons";
+}
+.calling-card-container {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}
+.calling-card-box {
+  max-height: 100%;
+  max-width: 30%;
+}
+.call-button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
 }
 
 /* Grid Areas */
@@ -192,6 +207,9 @@ body,
 }
 .trick-left-container {
   grid-area: trick-left;
+}
+.trick-center-container {
+  grid-area: trick-center;
 }
 .trick-right-container {
   grid-area: trick-right;

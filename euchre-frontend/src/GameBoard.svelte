@@ -61,7 +61,7 @@
 
   {#if roundState == "PLAYING"}
     <div class="board-center-container trick-container">
-      <Trick {trickData} {players} />
+      <Trick {gameData} {players} />
     </div>
   {:else}
     <div class="board-center-container call-view-container">

@@ -46,19 +46,6 @@
 </div>
 
 <style>
-  .calling-card-container {
-    display: flex;
-    justify-content: right;
-    align-items: center;
-  }
-  .calling-card-box {
-    max-height: 50%;
-    max-width: 50%;
-  }
   .call-button-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: left;
   }
 </style>
