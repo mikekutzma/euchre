@@ -4,7 +4,7 @@ A simple multiplayer online euchre app.
 
 Play at https://euchre.kutz.dev/
 
-![Game Play Screenshot](docs/screenshot.png)
+![Game Play Screenshot](docs/screenshot2.png)
 
 ## Local Build
 For test setup, i.e running all services in docker containers on a local
