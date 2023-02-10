@@ -16,3 +16,4 @@ docker compose up
 
 For local setup, i.e running each service locally directly on machine, each
 service can be started manually, following directions in each directory.
+
