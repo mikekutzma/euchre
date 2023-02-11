@@ -1,7 +1,7 @@
 version: "3"
 services:
   euchre-frontend:
-    image: mikekutzma/euchre-frontend
+    image: "ghcr.io/mikekutzma/euchre-frontend:latest"
     build:
       dockerfile: ./euchre-frontend/Dockerfile
       context: .
@@ -10,7 +10,7 @@ services:
     ports:
       - "5040:80"
   euchre-api:
-    image: mikekutzma/euchre-api
+    image: "ghcr.io/mikekutzma/euchre-api:latest"
     build:
       dockerfile: ./euchre-api/Dockerfile
       context: .
@@ -19,7 +19,7 @@ services:
     ports:
       - "5041:5041"
   euchre-ai:
-    image: mikekutzma/euchre-ai
+    image: "ghcr.io/mikekutzma/euchre-ai:latest"
     build:
       dockerfile: ./euchre-ai/Dockerfile
       context: .
