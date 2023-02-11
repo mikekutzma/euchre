@@ -12,4 +12,5 @@ RUN npm run build
 FROM nginx:stable-alpine
 COPY --from=build-deps /usr/src/app/dist /usr/share/nginx/html
 EXPOSE 80
+LABEL name="euchre-frontend"
 CMD ["nginx", "-g", "daemon off;"]
