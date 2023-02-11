@@ -17,5 +17,7 @@ WORKDIR /app
 
 RUN python3 -m pip install -r ./requirements.txt
 
+LABEL name="euchre-api"
+
 EXPOSE 5041
 CMD python3 euchre.py
