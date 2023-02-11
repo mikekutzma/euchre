@@ -17,4 +17,6 @@ WORKDIR /app
 
 RUN python3 -m pip install -r ./requirements.txt
 
+LABEL name="euchre-ai"
+
 CMD python3 client.py --retry 3 --wait 10
