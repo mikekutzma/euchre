@@ -12,12 +12,10 @@
     }
   }
   function clearTrick() {
-    console.log("Clearing Trick");
     $socket.emit("clearTrick", { gameId: $gameId });
   }
 
   function startRound() {
-    console.log("Starting Round");
     $socket.emit("startRound", { gameId: $gameId });
   }
 </script>
@@ -25,9 +23,21 @@
 {#each players as player}
   <div class="trick-{player.position}-container trick-cell">
     {#if trickCards[player.name]}
-      <div class="trick-card-box">
-        <Card cardData={trickCards[player.name]} />
-      </div>
+      {#if gameData.rnd.trick.done}
+        {#if gameData.rnd.trick.winner.user_id == player.user_id}
+          <div class="trick-card-box winner">
+            <Card cardData={trickCards[player.name]} />
+          </div>
+        {:else}
+          <div class="trick-card-box loser">
+            <Card cardData={trickCards[player.name]} />
+          </div>
+        {/if}
+      {:else}
+        <div class="trick-card-box">
+          <Card cardData={trickCards[player.name]} />
+        </div>
+      {/if}
     {/if}
   </div>
 {/each}
@@ -37,6 +47,8 @@
     <button on:click={startRound}>Start Round</button>
   {:else if gameData.rnd.trick.done}
     <button on:click={clearTrick}>Clear Trick</button>
+  {:else}
+    <i>{gameData.rnd.trump}</i>
   {/if}
 </div>
 
@@ -48,5 +60,8 @@
   .trick-center-container {
     display: flex;
     align-items: center;
+  }
+  .loser{
+      opacity: .7;
   }
 </style>

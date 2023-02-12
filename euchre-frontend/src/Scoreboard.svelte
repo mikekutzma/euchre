@@ -1,75 +1,45 @@
 <script>
   import { socket, gameId } from "./store.js";
   export let gameData;
-  let scores = [0, 0];
-  let turn;
-  let winner;
-  let trump;
-  let led;
-  let rnd;
-  let trick;
-  const debug = false;
+  let teams = [];
 
+  function getteams(data) {
+    let teams = [
+      { name: data.teams[0].team_name, score: data.score[0] },
+      { name: data.teams[1].team_name, score: data.score[1] },
+    ];
+    return teams;
+  }
   $: {
     if (gameData) {
-      scores = gameData.score;
-      // turn = gameData.trick.turn;
-      trump = gameData.rnd.trump;
-      winner = null;
-      if (gameData.rnd.trick.winner) {
-        winner = gameData.rnd.trick.winner.name;
-      }
-      led = gameData.rnd.trick.led;
-      rnd = gameData.rnd;
-      trick = rnd.trick;
+      teams = getteams(gameData);
     }
   }
-
 </script>
 
-<div class="scoresContainer">
-  <div class="scorediv">
-    <span>{scores[0]}</span>
-  </div>
-  {#if debug}
-    <pre id="statusdump">
-        {JSON.stringify(gameData, undefined, 2)}
-    </pre>
-  {/if}
-  <div class="scoresmiddle">
-    {#if trump}
-      <span>Trump: {trump}</span>
-    {/if}
-
-    {#if winner}
-      <span>Winner: {winner}</span>
-    {/if}
-  </div>
-  <div class="scorediv">
-    <span>{scores[1]}</span>
+<div class="scoreboard">
+  <div class="score-box">
+    {#each teams as team}
+      <div class="team-score-box">
+        <div class="team-name">{team.name}</div>
+        <div class="team-score">{team.score}</div>
+      </div>
+    {/each}
   </div>
 </div>
 
 <style>
-  #statusdump {
-    font-size: 0.4em;
-    text-align: left;
+  .scoreboard {
+    border-radius: 30px;
+    margin: 5px;
+    padding: 10px;
   }
-  .scoresContainer {
+
+  .score-box {
+  }
+
+  .team-score-box {
     display: flex;
-    flex-flow: row;
-    flex: 0 1 300px;
-    border: 1px solid white;
-    font-size: 2em;
-    overflow: auto;
-    /* height: 100vh;
-    */
-  }
-
-  .scorediv {
-  }
-
-  .scoresmiddle {
-    flex-grow: 8;
+    justify-content: space-between;
   }
 </style>

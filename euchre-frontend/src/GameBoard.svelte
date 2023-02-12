@@ -33,9 +33,7 @@
 </script>
 
 <div class="live-game-container">
-  <div class="scoreboard">
-    <Scoreboard {gameData} />
-  </div>
+  <Scoreboard {gameData} />
   {#each players as player}
     <div class="{player.position}-player-container hand-container">
       <div class="name-container">
@@ -65,7 +63,7 @@
     </div>
   {:else}
     <div class="board-center-container call-view-container">
-        <CallView {pickupCard} {myTurn} {canPass} {roundState} />
+      <CallView {pickupCard} {myTurn} {canPass} {roundState} />
     </div>
   {/if}
 </div>
