@@ -62,6 +62,6 @@
     align-items: center;
   }
   .loser{
-      opacity: .7;
+      opacity: .3;
   }
 </style>
