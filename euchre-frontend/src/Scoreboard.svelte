@@ -5,11 +5,18 @@
 
   function getteams(data) {
     let teams = [
-      { name: data.teams[0].team_name, score: data.score[0] },
-      { name: data.teams[1].team_name, score: data.score[1] },
+      { players: [], score: data.score[0] },
+      { players: [], score: data.score[1] },
     ];
+    data.players.forEach((player) => {
+      teams[player.team].players.push(player.name);
+    });
+    teams.forEach((team) => {
+        team.name = [...team.players].sort().join(" & ");
+    });
     return teams;
   }
+
   $: {
     if (gameData) {
       teams = getteams(gameData);
