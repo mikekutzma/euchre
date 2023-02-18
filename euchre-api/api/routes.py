@@ -4,10 +4,12 @@ from aiohttp import web
 from aiohttp_session import get_session, new_session
 from euchrelib.game import Game, GameJSON
 
-from . import sio
-
 routes = web.RouteTableDef()
 _logger = logging.getLogger(__name__)
+
+
+def sio(request):
+    return request.app["sio"].sio
 
 
 def json_response(*args, **kwargs):
@@ -67,7 +69,7 @@ async def newGame(request):
     request.app["games"][game.game_id] = game
 
     games = [id for id, game in request.app["games"].items() if not game.live]
-    await sio.sio.emit("gamesUpdate", games)
+    await sio(request).emit("gamesUpdate", games)
     return json_response({"gameId": game.game_id})
 
 
@@ -95,11 +97,11 @@ async def join(request):
     game.add_player(user, sid)
 
     # Add player to room
-    sio.sio.enter_room(sid, game_id)
+    sio(request).enter_room(sid, game_id)
 
     # lobby = {"players": request.app["games"][game_id].get_players()}
 
-    await sio.sio.emit("lobbyUpdate", game.status, room=game_id)
+    await sio(request).emit("lobbyUpdate", game.status, room=game_id)
     return json_response(game.status)
 
 
@@ -137,7 +139,7 @@ async def reset_trick(request):
     game_id = request.rel_url.query.get("gameId")
     game = request.app["games"][game_id]
     game.shuffle()
-    await sio.sio.emit("trickUpdate", game.trick)
+    await sio(request).emit("trickUpdate", game.trick)
     return json_response(game.trick)
 
 
