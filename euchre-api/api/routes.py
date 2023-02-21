@@ -30,30 +30,8 @@ async def get_games(request):
 @routes.get("/getSession")
 async def get_sess(request):
     session = await get_session(request)
-    data = {"logged_in": False}
     _logger.info(session)
-    if session.get("username") is not None:
-        data["logged_in"] = True
-        data["username"] = session["username"]
-    return json_response(data)
-
-
-@routes.post("/login")
-async def login(request):
-    data = await request.json()
-    user = data["username"]
-    session = await new_session(request)
-    session.set_new_identity(user)
-    session["username"] = user
-    _logger.info(session)
-    return json_response({"logged_in": True})
-
-
-@routes.post("/logout")
-async def logout(request):
-    session = await get_session(request)
-    session.invalidate()
-    data = {"logged_in": False}
+    data = {"username": session["username"], "id": str(session.identity)}
     return json_response(data)
 
 

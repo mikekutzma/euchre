@@ -27,25 +27,20 @@ async def init_app():
     games: Dict[str, List[Game]] = {}
     app["games"] = games
     app["AISid"] = None
-    dboptions = {"database": "euchre", "user": "mike"}
+    dboptions = {
+        "database": getenv("PGDATABASE"),
+        "user": getenv("PGUSER"),
+        "host": getenv("PGHOST"),
+    }
 
     setup_session(
         app,
-        PostgresStorage(
-            pg_pool=await asyncpg.create_pool(**dboptions)
-        ),
+        PostgresStorage(pg_pool=await asyncpg.create_pool(**dboptions)),
     )
 
     app.add_routes(routes)
     setup_cors(app)
     return app
-
-async def test(pool):
-    async with pool.acquire() as conn:
-        row = await conn.fetchrow("""SELECT * from users""")
-    _logger.info("Got rows")
-    _logger.info(row)
-    _logger.info("Done")
 
 
 if __name__ == "__main__":

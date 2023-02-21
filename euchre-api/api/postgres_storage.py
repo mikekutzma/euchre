@@ -1,9 +1,10 @@
 import json
 import logging
+import random
 from typing import Any, Callable, Optional
 
 from aiohttp import web
-from aiohttp_session import AbstractStorage, Session
+from aiohttp_session import AbstractStorage, Session, new_session
 
 _logger = logging.getLogger(__name__)
 
@@ -35,40 +36,61 @@ class PostgresStorage(AbstractStorage):
             decoder=decoder,
         )
         self.pool = pg_pool
+        with open("names.txt") as f:
+            self.names = [name.strip() for name in f.readlines() if name.strip()]
+        with open("nouns.json") as f:
+            self.nouns = json.load(f)
+
+    async def new_session(self) -> Session:
+        name = random.choice(self.names).title()
+        noun = random.choice(self.nouns[name[0]])
+        data = {"username": f"{noun} {name}"}
+        session_data = {"session": data}
+        insert = """
+            INSERT INTO users
+            (data)
+            VALUES(
+            $1
+            )
+            RETURNING ID;
+        """
+        async with self.pool.acquire() as conn:
+            key = await conn.fetchval(insert, json.dumps(session_data))
+        session = Session(key, data=session_data, new=True, max_age=self.max_age)
+        session.changed()
+        return session
 
     async def load_session(self, request: web.Request) -> Session:
         cookie = self.load_cookie(request)
         if cookie is None:
-            return Session(None, data=None, new=True, max_age=self.max_age)
+            session = await new_session(request)
         else:
             key = str(cookie)
             async with self.pool.acquire() as conn:
                 row = await conn.fetchrow("""SELECT * from users where id=$1""", key)
-                _logger.info(row)
 
             if row is None:
-                return Session(None, data=None, new=True, max_age=self.max_age)
-            data = row["data"]
-            data["id"] = row["id"]
-            return Session(key, data=data, new=False, max_age=self.max_age)
+                session = await new_session(request)
+
+            data = json.loads(row["data"])
+            _logger.info(data)
+            session = Session(key, data=data, new=False, max_age=self.max_age)
+        return session
 
     async def save_session(
         self, request: web.Request, response: web.StreamResponse, session: Session
     ) -> None:
         key = session.identity
-        if key is None:
-            key = self._key_factory()
-            self.save_cookie(response, key, max_age=session.max_age)
-        else:
-            if session.empty:
-                self.save_cookie(response, "", max_age=session.max_age)
-            else:
-                key = str(key)
-                self.save_cookie(response, key, max_age=session.max_age)
+        self.save_cookie(response, key, max_age=session.max_age)
 
-        data_str = self._encoder(self._get_session_data(session))
-        await self._redis.set(
-            self.cookie_name + "_" + key,
-            data_str,
-            ex=session.max_age,
-        )
+        data = self._get_session_data(session)
+        update = """
+            UPDATE
+                users
+            SET
+                data=$1
+            WHERE
+                id=$2
+        """
+        async with self.pool.acquire() as conn:
+            await conn.execute(update, json.dumps(data), key)
