@@ -18,6 +18,8 @@ services:
         - DOTENV_FILE=.env.prod
     ports:
       - "5041:5041"
+    secrets:
+      - pgdsn
   euchre-ai:
     image: "ghcr.io/mikekutzma/euchre/euchre.euchre-ai:latest"
     build:
@@ -27,3 +29,7 @@ services:
         - DOTENV_FILE=.env.prod
     depends_on:
       - euchre-api
+
+secrets:
+  pgdsn:
+    file: ./pgdsn.txt
