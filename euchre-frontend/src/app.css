@@ -34,9 +34,9 @@ h1 {
 }
 
 button {
-  border-radius: 8px;
+  border-radius: 6px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
+  padding: 0 1.2em; /* 0.6em 1.2em; */
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
@@ -47,7 +47,7 @@ button {
 button:hover {
   border-color: #646cff;
 }
-button:active{
+button:active {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
@@ -76,11 +76,24 @@ body,
 .live-game-container {
   display: grid;
   grid-template-columns: 25% 50% 25%;
-  grid-template-rows: 25% 50% 25%;
+  grid-template-rows: 12% 21% 46% 21%;
   grid-template-areas:
-    ". top-player status"
+    "status status status"
+    ". top-player ."
     "left-player board-center-container right-player"
     ". bottom-player .";
+}
+
+@media screen and (min-width: 600px) {
+  .live-game-container {
+    display: grid;
+    grid-template-columns: 25% 50% 25%;
+    grid-template-rows: 25% 50% 25%;
+    grid-template-areas:
+      ". top-player status"
+      "left-player board-center-container right-player"
+      ". bottom-player .";
+  }
 }
 
 .name-container {
