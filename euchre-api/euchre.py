@@ -4,16 +4,16 @@ import urllib
 from os import getenv
 from typing import Dict, List
 
-import asyncpg
 import socketio
 from aiohttp import web
 from aiohttp_session import setup as setup_session
 from dotenv import load_dotenv
 from euchrelib.game import Game
 from get_docker_secret import get_docker_secret
+from redis import asyncio as aioredis
 
 from api.cors import setup_cors
-from api.postgres_storage import PostgresStorage
+from api.redis_storage import RedisConfig, RedisStorage
 from api.routes import routes
 from api.sockets import SocketController
 from api.utils import setup_logging
@@ -30,17 +30,19 @@ async def init_app():
     games: Dict[str, List[Game]] = {}
     app["games"] = games
     app["AISid"] = None
-    dboptions = {
-        "dsn": get_docker_secret("pgdsn"),
-        "database": get_docker_secret("pgdatabase"),
-        "user": get_docker_secret("pguser"),
-        "host": get_docker_secret("pghost"),
-    }
-    pg_pool = await asyncpg.create_pool(**dboptions)
-    app["pg_pool"] = pg_pool
+
+    redisconf = RedisConfig(
+        host=get_docker_secret("redishost"),
+        port=get_docker_secret("redisport"),
+        username=get_docker_secret("redisuser"),
+        password=get_docker_secret("redispasswd"),
+        decode_responses=True,
+    )
+    redis = await aioredis.Redis(**redisconf.to_dict())
+    app["redis"] = redis
     setup_session(
         app,
-        PostgresStorage(pg_pool=pg_pool),
+        RedisStorage(redis=redis),
     )
 
     app.add_routes(routes)

@@ -1,3 +1,4 @@
 *.pem
 .DS_Store
 pgdsn.txt
+redispasswd.txt

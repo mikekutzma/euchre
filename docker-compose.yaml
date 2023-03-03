@@ -19,7 +19,7 @@ services:
     ports:
       - "5041:5041"
     secrets:
-      - pgdsn
+      - redispasswd
   euchre-ai:
     image: "ghcr.io/mikekutzma/euchre/euchre.euchre-ai:latest"
     build:
@@ -29,7 +29,18 @@ services:
         - DOTENV_FILE=.env.prod
     depends_on:
       - euchre-api
+  euchre-redis:
+    image: "ghcr.io/mikekutzma/euchre/euchre.euchre-redis:latest"
+    build:
+      dockerfile: ./redis/Dockerfile
+      context: .
+      args:
+        - DOTENV_FILE=.env.prod
+    secrets:
+      - redispasswd
+    volumes:
+      - /var/redisdata:/data
 
 secrets:
-  pgdsn:
-    file: ./pgdsn.txt
+  redispasswd:
+    file: ./redispasswd.txt
