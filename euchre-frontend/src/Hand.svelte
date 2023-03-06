@@ -4,7 +4,15 @@
   import { socket, apiUrl, gameId } from "./store.js";
 
   let handCards = [];
+  let roundState;
   export let myTurn = false;
+  export let gameData;
+
+  $: {
+    if (gameData) {
+      roundState = gameData.rnd.status;
+    }
+  }
 
   async function getHand() {
     try {
@@ -36,12 +44,17 @@
       handCards.splice(ind, 1);
       handCards = handCards; // Needed to react
       console.log("New Hand: %o", handCards);
-      $socket.emit("playCard", {
-        card: card,
-        gameId: $gameId,
-      });
-    } else {
-      alert("Not my turn..");
+      if (roundState == "PLAYING") {
+        $socket.emit("playCard", {
+          card: card,
+          gameId: $gameId,
+        });
+      } else if (roundState == "PICKUP_DISCARD") {
+        $socket.emit("discardCard", {
+          card: card,
+          gameId: $gameId,
+        });
+      }
     }
   }
 </script>

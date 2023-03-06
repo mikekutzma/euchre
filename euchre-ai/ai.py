@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from euchrelib.deck import Suit
+from euchrelib.deck import Suit, Card
 
 
 class AI:
@@ -33,3 +33,10 @@ class AI:
                 return followed[0]
             else:
                 return hand[0]
+    @classmethod
+    def discard_card(cls, gameStatus: Dict, hand:List):
+        pickup_card = Card.from_dict(gameStatus["rnd"]["pickup_card"])
+        discardable_cards = [card for card in hand if card != pickup_card]
+
+        # Need to implement some smarter logic here
+        return discardable_cards[0]

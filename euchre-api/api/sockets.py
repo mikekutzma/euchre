@@ -26,7 +26,9 @@ class SocketController:
     def register_handlers(self, sio):
         handlers = {
             "registerAI": self.registerAI,
-            "callTrump": self.callTrump,
+            "callTrumpOpen": self.callTrumpOpen,
+            "callTrumpPickup": self.callTrumpPickup,
+            "discardCard": self.discardCard,
             "passTrump": self.passTrump,
             "playCard": self.playCard,
             "startGame": self.startGame,
@@ -46,12 +48,31 @@ class SocketController:
         if ai_sid is not None:
             await self.sio.emit("gameStatus", game.status, room=ai_sid)
 
-    async def callTrump(self, sid, data):
+    async def callTrumpPickup(self, sid, data):
         username = data.get("username")
         suit = Suit[data["suit"]]
         game_id = data["gameId"]
         game = self.app["games"][game_id]
-        game.call_trump(suit, sid, username=username)
+        game.set_trump(suit, sid, username=username)
+        game.pickup_trump()
+        await self.sio.emit("refreshHand", {}, room=game_id)
+        await self.update_status(game)
+
+    async def callTrumpOpen(self, sid, data):
+        username = data.get("username")
+        suit = Suit[data["suit"]]
+        game_id = data["gameId"]
+        game = self.app["games"][game_id]
+        game.set_trump(suit, sid, username=username)
+        game.start_playing_round()
+        await self.update_status(game)
+
+    async def discardCard(self, sid, data):
+        card = Card.from_dict(data["card"])
+        game_id = data["gameId"]
+        game = self.app["games"][game_id]
+        game.discard_card(card)
+        game.start_playing_round()
         await self.update_status(game)
 
     async def passTrump(self, sid, data):

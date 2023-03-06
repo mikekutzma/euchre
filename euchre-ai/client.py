@@ -25,7 +25,9 @@ load_dotenv(".env")
 def get_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--url", type=str, required=False, default=getenv("API_CONTAINER_URL"))
+    parser.add_argument(
+        "--url", type=str, required=False, default=getenv("API_CONTAINER_URL")
+    )
     parser.add_argument("--retry", type=int, required=False, default=0)
     parser.add_argument("--wait", type=int, required=False, default=10)
 
@@ -102,6 +104,15 @@ async def on_game_status(data):
         else:
             _logger.info("Passing trump for %s", player["name"])
             await sio.emit("passTrump", {"gameId": game_id})
+    elif status == "PICKUP_DISCARD":
+        card = AI.discard_card(data, hand)
+        _logger.info("Discarding %s for %s", card, player["name"])
+        await sio.emit(
+            "discardCard", {"card": card, "username": player["name"], "gameId": game_id}
+        )
+
+    else:
+        _logger.error("Unknown status %s", status)
 
 
 async def main(args):

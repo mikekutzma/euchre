@@ -33,7 +33,13 @@ class Player:
         if sid is not None:
             self.sids = sorted(list(set([sid, *self.sids])))
 
-    def play_card(self, card):
+    def play_card(self, card: Card):
+        self.hand.remove(card)
+
+    def pickup_card(self, card: Card):
+        self.hand.append(card)
+
+    def discard_card(self, card: Card):
         self.hand.remove(card)
 
     def __eq__(self, other):
@@ -81,11 +87,12 @@ class RoundStatus(str, Enum):
     CALLING_PICKUP = "CALLING_PICKUP"
     CALLING_OPEN = "CALLING_OPEN"
     PLAYING = "PLAYING"
+    PICKUP_DISCARD = "PICKUP_DISCARD"
 
 
 @dataclass
 class Round:
-    dealer_index: int = 0
+    dealer_index: int = 3
     calling_team_index: Optional[int] = None
     trump: Optional[Suit] = None
     score: List[int] = field(default_factory=lambda: [0, 0])
@@ -239,7 +246,7 @@ class Game:
 
         self.turn_index = (self.turn_index + 1) % NPLAYERS
 
-    def call_trump(self, suit, sid=None, username=None):
+    def set_trump(self, suit, sid=None, username=None):
         if username is None:
             player = self.get_player_by_sid(sid)
         else:
@@ -248,7 +255,17 @@ class Game:
         self.rnd.trump = suit
         self.rnd.trick.trump = suit
 
-        # Need to change this to discard first
+    def start_playing_round(self):
+        self.rnd.status = RoundStatus.PLAYING
+        self.turn_index = (self.rnd.dealer_index + 1) % NPLAYERS
+
+    def pickup_trump(self):
+        self.rnd.status = RoundStatus.PICKUP_DISCARD
+        self.turn_index = self.rnd.dealer_index
+        self.players[self.rnd.dealer_index].pickup_card(self.rnd.pickup_card)
+
+    def discard_card(self, card):
+        self.players[self.rnd.dealer_index].discard_card(card)
         self.rnd.status = RoundStatus.PLAYING
         self.turn_index = (self.rnd.dealer_index + 1) % NPLAYERS
 

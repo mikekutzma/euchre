@@ -42,7 +42,7 @@
         </strong>
       </div>
       {#if player.name == $userid}
-        <Hand {myTurn} />
+        <Hand {myTurn} {gameData} />
       {:else}
         <div class="{player.orientation}-player hand-cards-container">
           {#each { length: player.n_cards } as _, i}
