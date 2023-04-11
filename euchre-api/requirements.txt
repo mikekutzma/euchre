@@ -15,6 +15,6 @@ multidict==6.0.3
 python-dotenv==0.21.0
 python-engineio==4.3.4
 python-socketio==5.7.2
-redis==4.5.1
+redis==4.4.4
 typing_extensions==4.5.0
 yarl==1.8.2
